@@ -1,0 +1,5 @@
+theme-override: PITCHME.css
+vertical-center: false
+logo: https://opencv.org/wp-content/uploads/2019/02/opencv-logo.png
+highlight : vs
+code-line-numbers : true
