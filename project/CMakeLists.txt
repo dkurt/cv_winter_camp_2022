@@ -35,8 +35,7 @@ include_directories(
 )
 
 file(GLOB LIB_SOURCES src/*.cpp)
-message(${LIB_SOURCES})
-add_library(algo SHARED ${LIB_SOURCES})
+add_library(algo STATIC ${LIB_SOURCES})
 
 # Regression test
 file(GLOB TEST_SOURCES test/*.cpp)

@@ -13,6 +13,7 @@
   * Accuracy test
   * Performance test
 * Let’s optimize
+* Practice / Homework
 
 ---
 
@@ -44,7 +45,6 @@ uint8_t* data = mat.ptr<uint8_t>();
 *  `std::cout << mat << std::endl` - To print `cv::Mat` in console and watch values
 
 ---
-
 ### OpenCV basic structures
 
 ```cpp
@@ -54,6 +54,29 @@ int y = rect.y;          int y = point.y;       int h = size.height;
 int w = rect.width;
 int h = rect.height;
 ```
+
+---
+### OpenCV methods
+Most of the methods work with basic OpenCV data structures as input and output
+
+```cpp
+cv::Mat src, dst, mask;
+
+cv::cvtColor(src, dst, COLOR_BGR2GRAY);
+
+cv::resize(src, dst, cv::Size(1280, 960));
+
+cv::Canny(src, dst, /*threshold1*/ 100, /*threshold2*/ 200);
+
+cv::inpaint(src, mask, dst, /*inpaintRadius*/ 3, cv::INPAINT_TELEA);
+
+std::vector<cv::Mat> images;
+cv::Ptr<Stitcher> stitcher = cv::Stitcher::create(cv::Sticher::PANORAMA);
+stitcher->stitch(images, dst);
+```
+
+---
+### BGR2Gray, parallel_for
 
 ---
 ### Regression tests
@@ -104,6 +127,41 @@ $ ./bin/test_algo --gtest_filter=bgr2gray*
 ---
 ### Parametrized regression test example
 
+---
+### Performance tests
+
+* Use `PERF_TEST` to define performance test
+* Wrap target code to a block `PERF_SAMPLE_BEGIN()` - `PERF_SAMPLE_END()`
+* OpenCV does as much iterations as it's needed to have stable metrics
+
+```cpp
+PERF_TEST(bgr2gray, u8_parallel)
+{
+    cv::Mat src(480, 640, CV_8UC3), dst;
+
+    PERF_SAMPLE_BEGIN()
+        bgr2gray_u8_parallel(src, dst);
+    PERF_SAMPLE_END()
+
+    SANITY_CHECK_NOTHING();
+}
+```
+
+```bash
+$ ./bin/perf_algo --gtest_filter=bgr2gray*
+
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from bgr2gray
+[ RUN      ] bgr2gray.u8_parallel
+[ PERFSTAT ]    (samples=100   mean=0.32   median=0.28   min=0.22   stddev=0.11 (33.9%))
+[       OK ] bgr2gray.u8_parallel (40 ms)
+[----------] 1 test from bgr2gray (58 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (91 ms total)
+[  PASSED  ] 1 test.
+```
 
 ---
 
@@ -111,6 +169,12 @@ $ ./bin/test_algo --gtest_filter=bgr2gray*
 1. Sobel operator
 
 ```cpp
+```
+     | -1  0  +1 |             | -1  -2  -1 |
+Gx = | -2  0  +2 | * A,   Gy = |  0   0   0 | * A
+     | -1  0  +1 |             | +1  +2  +1 |
+```
+
 cv::Sobel(src, dst, CV_8U, 1, 0);  // d/dx
 cv::Sobel(src, dst, CV_8U, 0, 1);  // d/dy
 ```
@@ -134,10 +198,10 @@ Gx =  |  0  -1  | * A,   Gy = | -1   0 | * A
 
 ---?code=project/src/prewitt.cpp&lang=cpp&title=Prewitt operator implementation
 
-@[3-17](Reference implementation)
-@[19-31](Parallel implementation)
-@[39-58](Parallel vectorized implementation)
-@[65-84](Parallel vectorized implementation)
-@[91-115](Parallel vectorized implementation)
+@[3-17](Reference implementation: 11.07ms)
+@[19-31](Parallel implementation: 9.41ms (x1.17))
+@[39-58](Parallel vectorized implementation: 2.56ms (x4.32))
+@[65-84](Parallel vectorized implementation: 2.51ms (x4.41))
+@[91-115](Parallel vectorized implementation: 2.11ms (x5.24))
 
 <!----------------------------------------------------------------------------->

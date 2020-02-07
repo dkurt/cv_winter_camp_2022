@@ -1,3 +1,8 @@
+# Intel Computer Vision Camp - Optimization Track Winter 2020
+
+Algorithms optimizations using OpenCV
+
+[![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/dkurt/cv_winter_camp_2020)
 
 ## Getting started
 
@@ -24,10 +29,10 @@
     cmake -DCMAKE_BUILD_TYPE=Release .. && make -j4
     ```
 
-  * Mic rosoft Windows
+  * Microsoft Windows
     ```sh
     "C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 14 Win64" ..
-    "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release
+    "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release -- /m:4
     ```
 
 ## C++ project structure
