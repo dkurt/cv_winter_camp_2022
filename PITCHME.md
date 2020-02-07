@@ -39,7 +39,7 @@ int channels = mat.channels();  // 3
 uint8_t* data = mat.ptr<uint8_t>();
 ```
 
-* `cv::Mat` types: `[depth | (i.e. CV_8U, CV_16F, CV_32F, CV_64F)] + number of channels`
+* `cv::Mat` types: `[depth | (i.e. CV_8U, CV_16F, CV_32F, CV_64F)] + channels`
 
 *  `std::cout << mat << std::endl` - To print `cv::Mat` in console and watch values
 
@@ -54,6 +54,56 @@ int y = rect.y;          int y = point.y;       int h = size.height;
 int w = rect.width;
 int h = rect.height;
 ```
+
+---
+### Regression tests
+
+One of OpenCV modules is named `ts`. It sonsists of
+* Google Test based testing infrastructure
+* OpenCV related extensions for regression and performance tests
+* Python scripts for tests analysis
+
+---
+### Regression test example
+
+* Use `TEST` macro to define non-parametrized test
+* Use `EXPECT_*` checks for numerical and logical tests
+
+```cpp
+#include <opencv2/ts.hpp>
+
+TEST(bgr2gray, parallel)
+{
+    cv::Mat src(10, 11, CV_8UC3), ref, dst;
+    randu(src, 0, 255);
+
+    bgr2gray_u8(src, ref);
+    bgr2gray_u8_parallel(src, dst);
+
+    EXPECT_EQ(countNonZero(ref != dst), 0);
+}
+```
+
+```bash
+$ ./bin/test_algo --gtest_filter=bgr2gray*
+
+[==========] Running 2 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 2 tests from bgr2gray
+[ RUN      ] bgr2gray.u8
+[       OK ] bgr2gray.u8 (0 ms)
+[ RUN      ] bgr2gray.parallel
+[       OK ] bgr2gray.parallel (0 ms)
+[----------] 2 tests from bgr2gray (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 2 tests from 1 test case ran. (0 ms total)
+[  PASSED  ] 2 tests.
+```
+
+---
+### Parametrized regression test example
+
 
 ---
 
@@ -84,10 +134,10 @@ Gx =  |  0  -1  | * A,   Gy = | -1   0 | * A
 
 ---?code=project/src/prewitt.cpp&lang=cpp&title=Prewitt operator implementation
 
-@[3-20]
-@[22-37]
-@[45-64]
-@[71-93]
-@[101-125]
+@[3-17](Reference implementation)
+@[19-31](Parallel implementation)
+@[39-58](Parallel vectorized implementation)
+@[65-84](Parallel vectorized implementation)
+@[91-115](Parallel vectorized implementation)
 
 <!----------------------------------------------------------------------------->
