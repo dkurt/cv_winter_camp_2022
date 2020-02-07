@@ -2,6 +2,8 @@
 
 #include "algo.hpp"
 
+using namespace testing;
+
 TEST(bgr2gray, u8)
 {
     cv::Mat src(10, 11, CV_8UC3), ref, dst;
@@ -16,9 +18,10 @@ TEST(bgr2gray, u8)
     EXPECT_LE(maxV, 1);
 }
 
-TEST(bgr2gray, parallel)
+typedef TestWithParam<tuple<int, int> > bgr2gray_p;
+TEST_P(bgr2gray_p, parallel)
 {
-    cv::Mat src(10, 11, CV_8UC3), ref, dst;
+    Mat src(/*rows*/ get<0>(GetParam()), /*cols*/ get<1>(GetParam()), CV_8UC3), ref, dst;
     randu(src, 0, 255);
 
     bgr2gray_u8(src, ref);
@@ -26,3 +29,7 @@ TEST(bgr2gray, parallel)
 
     EXPECT_EQ(countNonZero(ref != dst), 0);
 }
+INSTANTIATE_TEST_CASE_P(/**/, bgr2gray_p, Combine(
+    Values(3, 4),
+    Values(2, 5)
+));

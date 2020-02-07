@@ -95,9 +95,44 @@ One of OpenCV modules is named `ts`. It sonsists of
 ```cpp
 #include <opencv2/ts.hpp>
 
-TEST(bgr2gray, parallel)
+TEST(bgr2gray, u8)
 {
     cv::Mat src(10, 11, CV_8UC3), ref, dst;
+    randu(src, 0, 255);
+
+    bgr2gray_reference(src, ref);
+    bgr2gray_u8(src, dst);
+
+    double maxV;
+    minMaxLoc(abs(ref - dst), 0, &maxV);
+    EXPECT_LE(maxV, 1);
+}
+```
+
+```
+$ ./bin/test_algo --gtest_filter=bgr2gray.u8
+
+[==========] Running 1 test from 1 test case.
+[----------] Global test environment set-up.
+[----------] 1 test from bgr2gray
+[ RUN      ] bgr2gray.u8
+[       OK ] bgr2gray.u8 (15 ms)
+[----------] 1 test from bgr2gray (18 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test case ran. (21 ms total)
+[  PASSED  ] 1 test.
+```
+
+---
+### Parametrized regression test example
+
+* Define a list of parameters and instantiate test with their combinations
+```cpp
+typedef TestWithParam<tuple<int, int> > bgr2gray;
+TEST_P(bgr2gray, parallel)
+{
+    Mat src(/*rows*/ get<0>(GetParam()), /*cols*/ get<1>(GetParam()), CV_8UC3), ref, dst;
     randu(src, 0, 255);
 
     bgr2gray_u8(src, ref);
@@ -105,27 +140,27 @@ TEST(bgr2gray, parallel)
 
     EXPECT_EQ(countNonZero(ref != dst), 0);
 }
+INSTANTIATE_TEST_CASE_P(/**/, bgr2gray, Combine( Values(3, 4), Values(2, 5) ));
 ```
 
-```bash
-$ ./bin/test_algo --gtest_filter=bgr2gray*
-
-[==========] Running 2 tests from 1 test case.
+```
+[==========] Running 4 tests from 1 test case.
 [----------] Global test environment set-up.
-[----------] 2 tests from bgr2gray
-[ RUN      ] bgr2gray.u8
-[       OK ] bgr2gray.u8 (0 ms)
-[ RUN      ] bgr2gray.parallel
-[       OK ] bgr2gray.parallel (0 ms)
-[----------] 2 tests from bgr2gray (0 ms total)
+[----------] 4 tests from bgr2gray
+[ RUN      ] bgr2gray.parallel/0, where GetParam() = (3, 2)
+[       OK ] bgr2gray.parallel/0 (14 ms)
+[ RUN      ] bgr2gray.parallel/1, where GetParam() = (3, 5)
+[       OK ] bgr2gray.parallel/1 (0 ms)
+[ RUN      ] bgr2gray.parallel/2, where GetParam() = (4, 2)
+[       OK ] bgr2gray.parallel/2 (0 ms)
+[ RUN      ] bgr2gray.parallel/3, where GetParam() = (4, 5)
+[       OK ] bgr2gray.parallel/3 (0 ms)
+[----------] 4 tests from bgr2gray (24 ms total)
 
 [----------] Global test environment tear-down
-[==========] 2 tests from 1 test case ran. (0 ms total)
-[  PASSED  ] 2 tests.
+[==========] 4 tests from 1 test case ran. (27 ms total)
+[  PASSED  ] 4 tests.
 ```
-
----
-### Parametrized regression test example
 
 ---
 ### Performance tests
@@ -147,33 +182,30 @@ PERF_TEST(bgr2gray, u8_parallel)
 }
 ```
 
-```bash
-$ ./bin/perf_algo --gtest_filter=bgr2gray*
+```
+$ ./bin/perf_algo --gtest_filter=bgr2gray.u8_parallel
 
 [==========] Running 1 test from 1 test case.
 [----------] Global test environment set-up.
 [----------] 1 test from bgr2gray
 [ RUN      ] bgr2gray.u8_parallel
-[ PERFSTAT ]    (samples=100   mean=0.32   median=0.28   min=0.22   stddev=0.11 (33.9%))
-[       OK ] bgr2gray.u8_parallel (40 ms)
-[----------] 1 test from bgr2gray (58 ms total)
+[ PERFSTAT ]    (samples=100   mean=0.25   median=0.25   min=0.22   stddev=0.02 (9.5%))
+[       OK ] bgr2gray.u8_parallel (28 ms)
+[----------] 1 test from bgr2gray (29 ms total)
 
 [----------] Global test environment tear-down
-[==========] 1 test from 1 test case ran. (91 ms total)
+[==========] 1 test from 1 test case ran. (31 ms total)
 [  PASSED  ] 1 test.
 ```
 
 ---
-
 ### Example: edge detector
 1. Sobel operator
 
-```cpp
 ```
      | -1  0  +1 |             | -1  -2  -1 |
 Gx = | -2  0  +2 | * A,   Gy = |  0   0   0 | * A
      | -1  0  +1 |             | +1  +2  +1 |
-```
 
 cv::Sobel(src, dst, CV_8U, 1, 0);  // d/dx
 cv::Sobel(src, dst, CV_8U, 0, 1);  // d/dy
@@ -198,10 +230,11 @@ Gx =  |  0  -1  | * A,   Gy = | -1   0 | * A
 
 ---?code=project/src/prewitt.cpp&lang=cpp&title=Prewitt operator implementation
 
-@[3-17](Reference implementation: 11.07ms)
-@[19-31](Parallel implementation: 9.41ms (x1.17))
-@[39-58](Parallel vectorized implementation: 2.56ms (x4.32))
-@[65-84](Parallel vectorized implementation: 2.51ms (x4.41))
-@[91-115](Parallel vectorized implementation: 2.11ms (x5.24))
+@[3-17](Reference implementation: 12.76ms @ 1920x1080)
+@[19-31](Parallel implementation: 9.83ms @ 1920x1080 (x1.29))
+@[39-58](Parallel vectorized implementation: 2.57ms @ 1920x1080 (x4.96))
+@[65-84](Parallel vectorized implementation: 2.61ms @ 1920x1080 (x4.88))
+@[92-114](Parallel vectorized implementation: 2.54ms @ 1920x1080 (x5.02))
+@[115-130](Parallel vectorized implementation: 2.54ms @ 1920x1080 (x5.02))
 
 <!----------------------------------------------------------------------------->

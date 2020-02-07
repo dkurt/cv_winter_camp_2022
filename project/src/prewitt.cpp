@@ -39,8 +39,8 @@ void prewitt_x_parallel_vec(const Mat& src, Mat& dst) {
     parallel_for_(Range(0, src.rows), [&](const Range& range) {
         for (int y = range.start; y < range.end; ++y) {
             const uint8_t* psrc0 = bsrc.ptr(y);
-            const uint8_t* psrc1 = bsrc.ptr(y+1);
-            const uint8_t* psrc2 = bsrc.ptr(y+2);
+            const uint8_t* psrc1 = bsrc.ptr(y + 1);
+            const uint8_t* psrc2 = bsrc.ptr(y + 2);
             uint8_t* pdst = dst.ptr(y);
             int x = 0;
             for (; x <= dst.cols - v_uint8::nlanes; x += v_uint8::nlanes) {
@@ -89,7 +89,8 @@ void prewitt_x_parallel_vec_wrap2(const Mat& src, Mat& dst) {
     copyMakeBorder(src, bsrc, 1, 1, 1, 1, BORDER_REPLICATE);
     dst.create(src.size(), CV_8UC1);
     parallel_for_(Range(0, src.rows), [&](const Range& range) {
-        for (int y = range.start; y <= range.end - 2; ++y) {
+        int y = range.start;
+        for (; y <= range.end - 2; ++y) {
             const uint8_t* psrc0 = bsrc.ptr(y);
             const uint8_t* psrc1 = bsrc.ptr(y + 1);
             const uint8_t* psrc2 = bsrc.ptr(y + 2);
@@ -110,6 +111,22 @@ void prewitt_x_parallel_vec_wrap2(const Mat& src, Mat& dst) {
                 pdst0[x] = res + psrc0[x + 2] - psrc0[x];
                 pdst1[x] = res + psrc3[x + 2] - psrc3[x];
             }
+        }
+        const uint8_t* psrc0 = bsrc.ptr(y);
+        const uint8_t* psrc1 = bsrc.ptr(y + 1);
+        const uint8_t* psrc2 = bsrc.ptr(y + 2);
+        uint8_t* pdst = dst.ptr(y);
+        int x = 0;
+        for (; x <= dst.cols - v_uint8::nlanes; x += v_uint8::nlanes) {
+            v_uint8 res = v_add_wrap(v_sub_wrap(vx_load(psrc0 + x + 2), vx_load(psrc0 + x)),
+                          v_add_wrap(v_sub_wrap(vx_load(psrc1 + x + 2), vx_load(psrc1 + x)),
+                                     v_sub_wrap(vx_load(psrc2 + x + 2), vx_load(psrc2 + x))));
+            v_store(pdst + x, res);
+        }
+        for (; x < dst.cols; ++x) {
+            pdst[x] = psrc0[x + 2] - psrc0[x] +
+                      psrc1[x + 2] - psrc1[x] +
+                      psrc2[x + 2] - psrc2[x];
         }
     });
 }
