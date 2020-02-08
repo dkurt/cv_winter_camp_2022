@@ -292,7 +292,7 @@ Gx =  |  0  -1  | * A,   Gy = | -1   0 | * A
 * Implement Roberts Cross operator:
 ```
 input:  cv::Mat (single channel, uint8_t)
-output: cv::Mat (single channel, uint32_t)
+output: cv::Mat (single channel, int32_t)
 
 out = (Gx)^2 + (Gy)^2, where
 
