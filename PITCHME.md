@@ -86,7 +86,7 @@ stitcher->stitch(images, dst);
 <!----------------------------------------------------------------------------->
 
 ---
-### OpenCV parallel_for_
+### OpenCV `parallel_for_`
 
 Different backend depends on compilation options and target OS
 
@@ -285,3 +285,20 @@ Gx =  |  0  -1  | * A,   Gy = | -1   0 | * A
 @[115-130](Parallel vectorized implementation: 2.54ms @ 1920x1080 (x5.02))
 
 <!----------------------------------------------------------------------------->
+
+---
+### Practice / Homework
+* Go to https://github.com/dkurt/cv_winter_camp_2020 for slides and project source code
+* Implement Roberts Cross operator:
+```
+input:  cv::Mat (single channel, uint8_t)
+output: cv::Mat (single channel, uint32_t)
+
+out = (Gx)^2 + (Gy)^2, where
+
+      | +1   0  |             |  0  +1 |
+Gx =  |  0  -1  | * A,   Gy = | -1   0 | * A
+```
+* Write regression tests
+* Parallelize and vectorize algorithm
+* Write performance test and compare efficieny against reference version

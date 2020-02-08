@@ -17,3 +17,5 @@ void prewitt_x_parallel_vec(const Mat& src, Mat& dst);
 void prewitt_x_parallel_vec_wrap(const Mat& src, Mat& dst);
 
 void prewitt_x_parallel_vec_wrap2(const Mat& src, Mat& dst);
+
+void roberts_reference(const cv::Mat& src, cv::Mat& dst);

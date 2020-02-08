@@ -1,4 +1,4 @@
-# Intel Computer Vision Camp - Optimization Track Winter 2020
+# Intel Computer Vision Camp - Optimization Track (Winter 2020 :snowflake: :snowflake: :snowflake:)
 
 Algorithms optimizations using OpenCV
 
