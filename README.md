@@ -31,7 +31,7 @@ Algorithms optimizations using OpenCV
 
   * Microsoft Windows
     ```sh
-    "C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 14 Win64" ..
+    "C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 15 2017 Win64" ..
     "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release -- /m:4
     ```
 
