@@ -75,8 +75,28 @@ cv::Ptr<Stitcher> stitcher = cv::Stitcher::create(cv::Sticher::PANORAMA);
 stitcher->stitch(images, dst);
 ```
 
+<!----------------------------------------------------------------------------->
+
+---?code=project/src/bgr2gray.cpp&lang=cpp&title=BGR2Gray
+
+@[3-22](Reference implementation: 4.02ms @ 1920x1080)
+@[24-41](Fixed point: 2.39ms @ 1920x1080 (x1.68))
+@[43-63](Parallel implementation: 1.83ms @ 1920x1080 (x2.19))
+
+<!----------------------------------------------------------------------------->
+
 ---
-### BGR2Gray, parallel_for
+### OpenCV parallel_for_
+
+Different backend depends on compilation options and target OS
+
+1. Intel Threading Building Blocks (TBB)
+2. C= Parallel C/C++ Programming Language Extension
+3. OpenMP
+4. APPLE GCD
+5. Windows RT concurrency
+6. Windows concurrency
+7. Pthreads
 
 ---
 ### Regression tests
@@ -196,6 +216,33 @@ $ ./bin/perf_algo --gtest_filter=bgr2gray.u8_parallel
 [----------] Global test environment tear-down
 [==========] 1 test from 1 test case ran. (31 ms total)
 [  PASSED  ] 1 test.
+```
+
+---
+### Universal intrinsics
+Set of vectorized instructions that turn to platform specific operations at compile time
+
+* AVX / SSE / SIMD (x86)
+* NEON (ARM)
+* VSX (PowerPC)
+* MSA (MIPS)
+* WASM (JavaScript)
+
+```cpp
+#include <opencv2/core/hal/intrin.hpp>
+// ...
+std::vector<int> data = {1, 2, 3, 4, 5, 6, 7, 8};
+
+cv::v_int32x4 twos = cv::v_setall_s32(2);
+
+cv::v_int32x4 b0 = cv::v_load(&data[0]);
+b0 *= twos;
+v_store(&data[0], b0);
+
+b0 = cv::v_load(&data[4]);
+b0 -= twos;
+v_store(&data[4], b0);
+// data = {2, 4, 6, 8, 3, 4, 5, 6}
 ```
 
 ---
