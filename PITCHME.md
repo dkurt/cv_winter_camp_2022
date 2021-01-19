@@ -77,7 +77,7 @@ stitcher->stitch(images, dst);
 
 <!----------------------------------------------------------------------------->
 
----?code=project/src/bgr2gray.cpp&lang=cpp&title=BGR2Gray
+---?code=src/bgr2gray.cpp&lang=cpp&title=BGR2Gray
 
 @[3-22](Reference implementation: 4.02ms @ 1920x1080)
 @[24-41](Fixed point: 2.39ms @ 1920x1080 (x1.68))
@@ -275,7 +275,7 @@ Gx =  |  0  -1  | * A,   Gy = | -1   0 | * A
 
 <!----------------------------------------------------------------------------->
 
----?code=project/src/prewitt.cpp&lang=cpp&title=Prewitt operator implementation
+---?code=src/prewitt.cpp&lang=cpp&title=Prewitt operator implementation
 
 @[3-17](Reference implementation: 12.76ms @ 1920x1080)
 @[19-31](Parallel implementation: 9.83ms @ 1920x1080 (x1.29))

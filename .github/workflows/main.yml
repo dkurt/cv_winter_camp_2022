@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   pull_request:
 
 jobs:
@@ -23,9 +23,11 @@ jobs:
         make -j$(nproc --all)
 
     - name: Run tests
-      run: |
-        cd build
-        ./bin/test_algo
+      run: ./bin/test_algo
+      working-directory: build
+
+    - name: Run performance tests
+      run: ./bin/perf_algo
       working-directory: build
 
   run_win:
@@ -46,7 +48,35 @@ jobs:
       shell: cmd
 
     - name: Run tests
-      run: |
-        .\bin\test_algo
+      run: .\bin\Release\test_algo.exe
       shell: cmd
+      working-directory: build
+
+    - name: Run performance tests
+      run: .\bin\Release\perf_algo.exe
+      shell: cmd
+      working-directory: build
+
+  run_mac:
+    runs-on: macos-latest
+    name: Build and Test (macOS)
+
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Build
+      run: |
+        mkdir build && cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"
+        make -j$(nproc --all)
+
+    - name: Run tests
+      run: ./bin/test_algo
+      working-directory: build
+
+    - name: Run performance tests
+      run: ./bin/perf_algo
       working-directory: build

@@ -3,13 +3,14 @@
 Algorithms optimizations using OpenCV
 
 [![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/dkurt/cv_winter_camp_2020)
+[![CI](https://github.com/dkurt/cv_winter_camp_2020/workflows/CI/badge.svg?branch=master)](https://github.com/dkurt/cv_winter_camp_2020/actions?query=branch%3Amaster)
 
 ## Getting started
 
 * Clone this repository to your computer
   ```sh
   git clone https://github.com/dkurt/cv_winter_camp_2020
-  cd cv_winter_camp_2020/project
+  cd cv_winter_camp_2020
   ```
 
 * Initialize submodules
