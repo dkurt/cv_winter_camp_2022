@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
+project(cv_winter_camp)
+
 # OpenCV's flags
 set(BUILD_LIST "ts,core" CACHE STRING "")
 set(WITH_WEBP OFF CACHE BOOL "")
