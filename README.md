@@ -1,16 +1,16 @@
-# Intel Computer Vision Camp - Optimization Track (Winter 2020 :snowflake: :snowflake: :snowflake:)
+# Intel Computer Vision Camp - Optimization Track (Winter 2021 :snowflake: :snowflake: :snowflake:)
 
 Algorithms optimizations using OpenCV
 
-[![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/dkurt/cv_winter_camp_2020)
-[![CI](https://github.com/dkurt/cv_winter_camp_2020/workflows/CI/badge.svg?branch=master)](https://github.com/dkurt/cv_winter_camp_2020/actions?query=branch%3Amaster)
+[![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/dkurt/cv_winter_camp_2021)
+[![CI](https://github.com/dkurt/cv_winter_camp_2021/workflows/CI/badge.svg?branch=master)](https://github.com/dkurt/cv_winter_camp_2021/actions?query=branch%3Amaster)
 
 ## Getting started
 
 * Clone this repository to your computer
   ```sh
-  git clone https://github.com/dkurt/cv_winter_camp_2020
-  cd cv_winter_camp_2020
+  git clone https://github.com/dkurt/cv_winter_camp_2021
+  cd cv_winter_camp_2021
   ```
 
 * Initialize submodules
@@ -21,7 +21,6 @@ Algorithms optimizations using OpenCV
 
 * Build a project (make sure if `cmake` installed)
   ```sh
-
   mkdir build && cd build
   ```
 
@@ -32,8 +31,8 @@ Algorithms optimizations using OpenCV
 
   * Microsoft Windows
     ```sh
-    "C:\Program Files\CMake\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 15 2017 Win64" ..
-    "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release -- /m:4
+    "C:\Program Files\CMake\bin\cmake.exe" -G "Visual Studio 16 2019" -A x64 ..
+    "C:\Program Files\CMake\bin\cmake.exe" --build . --config Release -j 4
     ```
 
 ## C++ project structure
