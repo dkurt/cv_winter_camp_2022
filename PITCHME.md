@@ -79,9 +79,11 @@ stitcher->stitch(images, dst);
 
 ---?code=src/bgr2gray.cpp&lang=cpp&title=BGR2Gray
 
+@snap[south span-100 text-09]
 @[3-22](Reference implementation: 4.02ms @ 1920x1080)
 @[24-41](Fixed point: 2.39ms @ 1920x1080 (x1.68))
 @[43-63](Parallel implementation: 1.83ms @ 1920x1080 (x2.19))
+@snapend
 
 <!----------------------------------------------------------------------------->
 
@@ -277,18 +279,20 @@ Gx =  |  0  -1  | * A,   Gy = | -1   0 | * A
 
 ---?code=src/prewitt.cpp&lang=cpp&title=Prewitt operator implementation
 
+@snap[south span-100 text-09]
 @[3-17](Reference implementation: 12.76ms @ 1920x1080)
 @[19-31](Parallel implementation: 9.83ms @ 1920x1080 (x1.29))
 @[39-58](Parallel vectorized implementation: 2.57ms @ 1920x1080 (x4.96))
 @[65-84](Parallel vectorized implementation: 2.61ms @ 1920x1080 (x4.88))
 @[92-114](Parallel vectorized implementation: 2.54ms @ 1920x1080 (x5.02))
 @[115-130](Parallel vectorized implementation: 2.54ms @ 1920x1080 (x5.02))
+@snapend
 
 <!----------------------------------------------------------------------------->
 
 ---
 ### Practice / Homework
-* Go to https://github.com/dkurt/cv_winter_camp_2020 for slides and project source code
+* Go to https://github.com/dkurt/cv_winter_camp_2021 for slides and project source code
 * Implement Roberts Cross operator:
 ```
 input:  cv::Mat (single channel, uint8_t)
