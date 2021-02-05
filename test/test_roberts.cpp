@@ -17,7 +17,7 @@ TEST_P(Roberts, parallel)
 TEST_P(Roberts, parallel_vec_wrap)
 {
     cv::Mat src(GetParam(), CV_8UC1), ref, dst;
-    randu(src, 0, 255);
+    randu(src, 0, 127);
 
     roberts_reference(src, ref);
     roberts_parallel_vec_wrap(src, dst);
