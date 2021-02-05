@@ -18,7 +18,7 @@ jobs:
 
     - name: Build
       run: |
-        mkdir build && cd build
+        mkdir -p build && cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release
         make -j$(nproc --all)
 
@@ -42,7 +42,7 @@ jobs:
 
     - name: Build
       run: |
-        mkdir build && cd build
+        mkdir -p build && cd build
         cmake -G "Visual Studio 16 2019" -A x64 ..
         cmake --build . --config Release -j 2
       shell: cmd
@@ -69,7 +69,7 @@ jobs:
 
     - name: Build
       run: |
-        mkdir build && cd build
+        mkdir -p build && cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-std=c++11"
         make -j$(nproc --all)
 
