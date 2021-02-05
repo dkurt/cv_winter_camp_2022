@@ -1,0 +1,11 @@
+[----------] 3 tests from Roberts
+[ RUN      ] Roberts.ref
+[ PERFSTAT ]    (samples=50   mean=5.86   median=5.87   min=5.74   stddev=0.08 (1.4%))
+[       OK ] Roberts.ref (301 ms)
+[ RUN      ] Roberts.parallel
+[ PERFSTAT ]    (samples=100   mean=2.13   median=2.11   min=1.97   stddev=0.10 (4.6%))
+[       OK ] Roberts.parallel (219 ms)
+[ RUN      ] Roberts.roberts_parallel_vec
+[ PERFSTAT ]    (samples=100   mean=1.37   median=1.40   min=1.20   stddev=0.10 (7.3%))
+[       OK ] Roberts.roberts_parallel_vec (142 ms)
+[----------] 3 tests from Roberts (675 ms total)
