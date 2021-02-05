@@ -27,30 +27,3 @@ void roberts_parallel(const cv::Mat& src, cv::Mat& dst) {
             }
     });
 }
-
-//#include <opencv2/core/hal/intrin.hpp>
-//
-//void roberts_parallel_vec(const Mat& src, Mat& dst) {
-//    Mat bsrc;
-//    copyMakeBorder(src, bsrc, 1, 1, 1, 1, BORDER_REPLICATE);
-//    dst.create(src.size(), CV_32SC1);
-//    parallel_for_(Range(0, src.rows), [&](const Range& range) {
-//        for (int y = range.start; y < range.end; ++y) {
-//            const uint8_t* psrc0 = bsrc.ptr(y);
-//            const uint8_t* psrc1 = bsrc.ptr(y + 1);
-//            const uint8_t* psrc2 = bsrc.ptr(y + 2);
-//            uint8_t* pdst = dst.ptr(y);
-//            int x = 0;
-//            for (; x <= dst.cols - v_uint8::nlanes; x += v_uint8::nlanes) {
-//                v_uint8 res = (vx_load(psrc0 + x)- vx_load(psrc1+x+1))*
-//                    (vx_load(psrc0 + x) - vx_load(psrc1 + x + 1))+
-//                    (vx_load(psrc0 + x + 1) - vx_load(psrc1 + x))* (vx_load(psrc0 + x + 1) - vx_load(psrc1 + x));
-//                v_store(pdst + x, res);
-//            }
-//            for (; x < dst.cols; ++x) {
-//                pdst[x] = (psrc0[x] - psrc1[x + 1]) * (psrc0[x] - psrc1[x + 1]) + (psrc0[x + 1] - psrc1[x]) * (psrc0[x + 1] - psrc1[x]);
-//                   
-//            }
-//        }
-//        });
-//}
