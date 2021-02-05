@@ -33,21 +33,19 @@ void roberts_parallel(const Mat& src, Mat& dst) {
 void roberts_parallel_vec_wrap(const Mat& src, Mat& dst) {
     Mat bsrc;
     copyMakeBorder(src, bsrc, 1, 1, 1, 1, BORDER_REPLICATE);
-    dst.create(src.size(), CV_32SC1);
+    dst.create(src.size(), CV_16SC1);
     parallel_for_(Range(0, src.rows), [&](const Range& range) {
         for (int y = range.start; y < range.end; ++y) {
             const uint8_t* psrc0 = bsrc.ptr(y);
             const uint8_t* psrc1 = bsrc.ptr(y + 1);
-            uint8_t* pdst = dst.ptr(y);
+            int16_t* pdst = dst.ptr<int16_t>(y);
             int x = 0;
-            for (; x <= dst.cols - v_uint8::nlanes; x += v_uint8::nlanes) {
-                v_uint8 res = v_add_wrap(
-                    v_mul_wrap(v_sub_wrap(vx_load(psrc0 + x), vx_load(psrc1 + x + 1)), 
-                               v_sub_wrap(vx_load(psrc0 + x), vx_load(psrc1 + x + 1))),
-                    v_mul_wrap(v_sub_wrap(vx_load(psrc0 + x + 1), vx_load(psrc1 + x)),
-                               v_sub_wrap(vx_load(psrc0 + x + 1), vx_load(psrc1 + x)))
-                );
-                v_store(pdst + x, res);
+            for (; x <= dst.cols - v_int16::nlanes; x += v_int16::nlanes) {
+                v_int16 vdx = v_reinterpret_as_s16(vx_load_expand(psrc0 + x)) -
+                    v_reinterpret_as_s16(vx_load_expand(psrc1 + x + 1));
+                v_int16 vdy = v_reinterpret_as_s16(vx_load_expand(psrc0 + x + 1)) -
+                    v_reinterpret_as_s16(vx_load_expand(psrc1 + x));
+                v_store(pdst + x, vdx * vdx + vdy * vdy);
             }
             for (; x < dst.cols; ++x) {
                 pdst[x] = (psrc0[x] - psrc1[x + 1]) * (psrc0[x] - psrc1[x + 1]) +
