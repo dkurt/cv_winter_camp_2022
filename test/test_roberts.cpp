@@ -19,8 +19,8 @@ TEST_P(Roberts, parallel_vec_wrap)
     cv::Mat src(GetParam(), CV_8UC1), ref, dst;
     randu(src, 0, 255);
 
-    prewitt_x(src, ref);
-    prewitt_x_parallel_vec_wrap(src, dst);
+    roberts_reference(src, ref);
+    roberts_parallel_vec_wrap(src, dst);
 
     EXPECT_EQ(countNonZero(ref != dst), 0);
 }
