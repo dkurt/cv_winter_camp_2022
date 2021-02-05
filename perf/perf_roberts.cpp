@@ -23,3 +23,14 @@ PERF_TEST(Roberts, parallel)
 
         SANITY_CHECK_NOTHING();
 }
+
+PERF_TEST(Roberts, roberts_parallel_vec)
+{
+    cv::Mat src(1080, 1920, CV_8UC1), dst;
+
+    PERF_SAMPLE_BEGIN()
+        roberts_parallel_vec(src, dst);
+    PERF_SAMPLE_END()
+
+        SANITY_CHECK_NOTHING();
+}
