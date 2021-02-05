@@ -3,6 +3,7 @@
 Algorithms optimizations using OpenCV
 
 [![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/dkurt/cv_winter_camp_2021)
+[![Gitter](https://badges.gitter.im/Intel-Winter-Camp-2021/community.svg)](https://gitter.im/Intel-Winter-Camp-2021/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![CI](https://github.com/dkurt/cv_winter_camp_2021/workflows/CI/badge.svg?branch=master)](https://github.com/dkurt/cv_winter_camp_2021/actions?query=branch%3Amaster)
 
 ## Getting started
