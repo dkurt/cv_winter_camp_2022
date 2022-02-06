@@ -1,17 +1,17 @@
-# Intel Computer Vision Camp - Optimization Track (Winter 2021 :snowflake: :snowflake: :snowflake:)
+# Intel Computer Vision Camp - Optimization Track (Winter 2022 :snowflake: :snowflake: :snowflake:)
 
 Algorithms optimizations using OpenCV
 
 [![GitPitch](https://gitpitch.com/assets/badge.svg)](https://gitpitch.com/dkurt/cv_winter_camp_2021)
-[![Gitter](https://badges.gitter.im/Intel-Winter-Camp-2021/community.svg)](https://gitter.im/Intel-Winter-Camp-2021/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![CI](https://github.com/dkurt/cv_winter_camp_2021/workflows/CI/badge.svg?branch=master)](https://github.com/dkurt/cv_winter_camp_2021/actions?query=branch%3Amaster)
+[![chat](https://img.shields.io/badge/join-chat-5865f2?style=plastic&logo=discord&logoColor=white)](https://discord.com/channels/935663182255632486/935663183383916576)
+[![CI](https://github.com/dkurt/cv_winter_camp_2022/workflows/CI/badge.svg?branch=master)](https://github.com/dkurt/cv_winter_camp_2022/actions?query=branch%3Amaster)
 
 ## Getting started
 
 * Clone this repository to your computer
   ```sh
-  git clone https://github.com/dkurt/cv_winter_camp_2021
-  cd cv_winter_camp_2021
+  git clone https://github.com/dkurt/cv_winter_camp_2022
+  cd cv_winter_camp_2022
   ```
 
 * Initialize submodules
