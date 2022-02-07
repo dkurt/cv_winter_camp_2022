@@ -12,3 +12,8 @@ void roberts_reference(const cv::Mat& src, cv::Mat& dst) {
             dst.at<uint16_t>(y, x) = dx * dx + dy * dy;
         }
 }
+
+
+void roberts(const cv::Mat& src, cv::Mat& dst) {
+    roberts_reference(src, dst);
+}
