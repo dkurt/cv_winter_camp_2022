@@ -25,4 +25,9 @@ TEST_P(Roberts, no_copy_parallel)
     test_roberts(GetParam(), roberts_no_copy_parallel);
 }
 
+TEST_P(Roberts, no_copy_parallel_vec)
+{
+    test_roberts(GetParam(), roberts_no_copy_parallel_vec);
+}
+
 INSTANTIATE_TEST_CASE_P(/**/, Roberts, testing::Values(TYPICAL_MAT_SIZES));

@@ -23,3 +23,5 @@ void roberts_reference(const cv::Mat& src, cv::Mat& dst);
 void roberts_parallel(const cv::Mat& src, cv::Mat& dst);
 
 void roberts_no_copy_parallel(const cv::Mat& src, cv::Mat& dst);
+
+void roberts_no_copy_parallel_vec(const cv::Mat& src, cv::Mat& dst);
