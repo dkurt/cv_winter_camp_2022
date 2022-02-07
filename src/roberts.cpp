@@ -14,6 +14,34 @@ void roberts_reference(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
+void roberts_no_copy_parallel(const cv::Mat& src, cv::Mat& dst) {
+    CV_Assert(src.type() == CV_8UC1);
+    dst.create(src.size(), CV_16SC1);
+
+    for (int y = 0; y + 1 < dst.rows; ++y) {
+        uchar const * const r0 = src.ptr(y);
+        uchar const * const r1 = src.ptr(y + 1);
+        uint16_t * const rd = dst.ptr<uint16_t>(y + 1);
+        for (int x = 0; x + 1 < dst.cols; ++x) {
+            int dx = r0[x] - r1[x + 1];
+            int dy = r0[x + 1] - r1[x];
+            rd[x + 1] = dx * dx + dy * dy;
+        }
+    }
+
+    dst.at<uint16_t>(0, 0) = 0;
+
+    for (int x = 0; x + 1 < dst.cols; ++x) {
+        int d = src.at<uchar>(0, x) - src.at<uchar>(0, x + 1);
+        dst.at<uint16_t>(0, x + 1) = 2 * d * d;
+    }
+
+    for (int y = 0; y + 1 < dst.rows; ++y) {
+        int d = src.at<uchar>(y, 0) - src.at<uchar>(y + 1, 0);
+        dst.at<uint16_t>(y + 1, 0) = 2 * d * d;
+    }
+}
+
 void roberts(const cv::Mat& src, cv::Mat& dst) {
-    roberts_reference(src, dst);
+    roberts_no_copy_parallel(src, dst);
 }
