@@ -65,6 +65,29 @@ void roberts_no_copy_parallel(const cv::Mat& src, cv::Mat& dst) {
 }
 
 
+void process_row_vec(uchar const * const r0, uchar const * const r1,
+                     uint16_t * const rdst, int const cols)
+{
+    int x = 0;
+    int const step = v_uint16::nlanes;
+    for (; x + step + 1 < cols; x += step) {
+        v_int16 const r0c0 = v_reinterpret_as_s16(vx_load_expand(r0 + x));
+        v_int16 const r0c1 = v_reinterpret_as_s16(vx_load_expand(r0 + x + 1));
+        v_int16 const r1c0 = v_reinterpret_as_s16(vx_load_expand(r1 + x));
+        v_int16 const r1c1 = v_reinterpret_as_s16(vx_load_expand(r1 + x + 1));
+        v_int16 const dx = r0c0 - r1c1;
+        v_int16 const dy = r0c1 - r1c0;
+        v_int16 const res = v_add_wrap(v_mul_wrap(dx, dx), v_mul_wrap(dy, dy));
+        v_store(rdst + x + 1, v_reinterpret_as_u16(res));
+    }
+    for (; x + 1 < cols; ++x) {
+        int dx = r0[x] - r1[x + 1];
+        int dy = r0[x + 1] - r1[x];
+        rdst[x + 1] = dx * dx + dy * dy;
+    }
+}
+
+
 void roberts_no_copy_parallel_vec(const cv::Mat& src, cv::Mat& dst) {
     CV_Assert(src.type() == CV_8UC1);
     dst.create(src.size(), CV_16SC1);
@@ -74,45 +97,13 @@ void roberts_no_copy_parallel_vec(const cv::Mat& src, cv::Mat& dst) {
             uchar const * const r0 = src.ptr(y);
             uchar const * const r1 = src.ptr(y + 1);
             uint16_t * const rd = dst.ptr<uint16_t>(y + 1);
-
-            int x = 0;
-            int const step = v_uint16::nlanes;
-            for (; x + step + 1 < dst.cols; x += step) {
-                v_int16 const r0c0 = v_reinterpret_as_s16(vx_load_expand(r0 + x));
-                v_int16 const r0c1 = v_reinterpret_as_s16(vx_load_expand(r0 + x + 1));
-                v_int16 const r1c0 = v_reinterpret_as_s16(vx_load_expand(r1 + x));
-                v_int16 const r1c1 = v_reinterpret_as_s16(vx_load_expand(r1 + x + 1));
-                v_int16 const dx = r0c0 - r1c1;
-                v_int16 const dy = r0c1 - r1c0;
-                v_int16 const res = v_add_wrap(v_mul_wrap(dx, dx), v_mul_wrap(dy, dy));
-                v_store(rd + x + 1, v_reinterpret_as_u16(res));
-            }
-            for (; x + 1 < dst.cols; ++x) {
-                int dx = r0[x] - r1[x + 1];
-                int dy = r0[x + 1] - r1[x];
-                rd[x + 1] = dx * dx + dy * dy;
-            }
+            process_row_vec(r0, r1, rd, dst.cols);
         }
     });
 
     dst.at<uint16_t>(0, 0) = 0;
 
-    int x = 0;
-    int const step = v_uint16::nlanes;
-    uchar const * const r0 = src.ptr(0);
-    uint16_t * const rd = dst.ptr<uint16_t>(0);
-    for (; x + step + 1 < dst.cols; x += step) {
-        v_int16 const r0c0 = v_reinterpret_as_s16(vx_load_expand(r0 + x));
-        v_int16 const r0c1 = v_reinterpret_as_s16(vx_load_expand(r0 + x + 1));
-        v_int16 const d = r0c0 - r0c1;
-        v_int16 const dsqr = v_mul_wrap(d, d);
-        v_int16 const res = v_add_wrap(dsqr, dsqr);
-        v_store(rd + x + 1, v_reinterpret_as_u16(res));
-    }
-    for (; x + 1 < dst.cols; ++x) {
-        int d = src.at<uchar>(0, x) - src.at<uchar>(0, x + 1);
-        dst.at<uint16_t>(0, x + 1) = 2 * d * d;
-    }
+    process_row_vec(src.ptr(0), src.ptr(0), dst.ptr<uint16_t>(0), dst.cols);
 
     for (int y = 0; y + 1 < dst.rows; ++y) {
         int d = src.at<uchar>(y, 0) - src.at<uchar>(y + 1, 0);
